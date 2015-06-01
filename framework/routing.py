@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import re
 
+from exceptions import HTTPError
+from components import responses
+
 
 class Route(object):
 
@@ -65,3 +68,31 @@ class Route(object):
                 pass
         parser_regex += "$"
         return parser_regex
+
+
+class Map(object):
+
+    def __init__(self, maps):
+        """Initializes the class.
+
+        Args:
+            maps: the dictionary of the pairing of the url's patterns and
+                handlers.
+        """
+        self.maps = maps
+
+    def delegate(self, url, **args):
+        """Delegates the url to the right handler.
+        
+        Args:
+            url: the url to access.
+            **args: whatever
+
+        Returns:
+            handler(**args): the handler class.
+        """
+        for pattern, handler in self.maps:
+            m = pattern.match(url)
+            if m:
+                return handler(**args)
+        raise HTTPError(404, responses[400][0])

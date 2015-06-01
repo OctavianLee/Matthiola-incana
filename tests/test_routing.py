@@ -4,7 +4,8 @@ import unittest
 from .constants import CONST
 from test import TestCase
 
-from framework.routing import Route
+from framework.routing import Route, Map
+from framework.web import Handler
 
 
 class RouteTest(TestCase):
@@ -26,3 +27,26 @@ class RouteTest(TestCase):
         self.route.add(path, handler_name)
         self.assertEqual(self.route.maps[0][0].pattern, regex)
         self.assertEqual(self.route.maps[0][1], handler_name)
+
+
+class MapTest(TestCase):
+    '''Tests the Map class.'''
+
+    def setUp(self):
+        '''Sets up'''
+        self.normal_name = CONST.STRING
+        int_name = CONST.STRING
+        str_name = CONST.STRING
+        handler_name = CONST.STRING
+        self.handler = type(handler_name, (Handler,), {}) 
+        print self.handler
+        path = '/' + self.normal_name + '/{'+ str_name + '}/{int:' + int_name + '}'
+        route = Route()
+        route.add(path, self.handler)
+        self.map = Map(route.maps)
+
+    def test_delegate(self):
+        url = '/{0}/{1}/{2}'.format(
+            self.normal_name, CONST.STRING, CONST.NUMBER)
+        handler = self.map.delegate(url)
+        self.assertEqual(type(handler), self.handler)

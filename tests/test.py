@@ -2,7 +2,7 @@
 import unittest
 from .constants import CONST
 
-from framework.web import HTTPError
+from framework.exceptions import HTTPError
 
 class TestCase(unittest.TestCase):
     '''Creates a TestCase template to help test.'''

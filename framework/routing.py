@@ -45,7 +45,8 @@ class Route(object):
         """
       
         rule = re.compile(r"/({(?:int:)?(?: )*[a-zA-Z_]\w*})")
-        url_list = rule.split(path)[:-1]
+        url_raw_list = rule.split(path)
+        url_list = filter(lambda x: x, url_raw_list)
         parser_regex = '^'
         for elem in url_list:
             parser_regex += "\\"
@@ -53,11 +54,12 @@ class Route(object):
                 parser_regex += elem
             elif elem.startswith('{'):
                 new_elem = elem.replace(' ', '')
+                parser_regex += '/'
                 if new_elem[1:5] == 'int:':
-                    parser_regex += '(?P<{0}>\d)'.format(
+                    parser_regex += '(?P<{0}>\d+)'.format(
                         new_elem[5:len(new_elem)-1])
                 else:
-                    parser_regex += '(?P<{0}>\w)'.format(
+                    parser_regex += '(?P<{0}>\w+)'.format(
                         new_elem[1:len(new_elem)-1])
             else:
                 pass

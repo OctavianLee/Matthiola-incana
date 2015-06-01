@@ -13,6 +13,8 @@ def constant(fn):
 def get_random_str(n):
     elements = string.letters + string.digits
     result = random.sample(elements, n)
+    if result[0].isdigit():
+        result = result[1:]
     return ''.join(result)
 
 def get_random_int():

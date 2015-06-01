@@ -95,4 +95,4 @@ class Map(object):
             m = pattern.match(url)
             if m:
                 return handler(**args)
-        raise HTTPError(404, responses[400][0])
+        raise HTTPError(404, responses[404][0])

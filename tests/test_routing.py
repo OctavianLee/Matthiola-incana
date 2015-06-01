@@ -6,6 +6,7 @@ from test import TestCase
 
 from framework.routing import Route, Map
 from framework.web import Handler
+from framework.exceptions import HTTPError
 
 
 class RouteTest(TestCase):
@@ -39,7 +40,6 @@ class MapTest(TestCase):
         str_name = CONST.STRING
         handler_name = CONST.STRING
         self.handler = type(handler_name, (Handler,), {}) 
-        print self.handler
         path = '/' + self.normal_name + '/{'+ str_name + '}/{int:' + int_name + '}'
         route = Route()
         route.add(path, self.handler)
@@ -50,3 +50,7 @@ class MapTest(TestCase):
             self.normal_name, CONST.STRING, CONST.NUMBER)
         handler = self.map.delegate(url)
         self.assertEqual(type(handler), self.handler)
+        url += '/{0}'.format(CONST.STRING)
+        with self.assertRaises(HTTPError):
+            self.map.delegate(url)
+
